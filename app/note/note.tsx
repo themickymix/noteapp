@@ -80,7 +80,17 @@ function Note({ noteId }: { noteId: string }) {
 
   return (
     <div className="relative">
-      <div className="p-1 md:p-10">
+      {/* Fixed Navbar for Back and Delete */}
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center p-3 bg-white shadow-md">
+        <Link href="/">
+          <span className="flex items-center space-x-1 text-gray-700 hover:text-black">
+            <ChevronLeft size={20} /> <span>Back</span>
+          </span>
+        </Link>
+        <Delete id={noteId} />
+      </div>
+
+      <div className="p-1 md:p-10 pt-14">
         <div className="h-[80vh] w-full">
           <input
             type="text"
@@ -98,22 +108,10 @@ function Note({ noteId }: { noteId: string }) {
             onChange={(e) =>
               setLocalNote({ ...localNote, content: e.target.value })
             }
-            className="border-none outline-none p-0 m-0  w-[100%] h-[100%] resize-none overflow-auto"
+            className="border-none outline-none p-0 m-0 w-[100%] h-[100%] resize-none overflow-auto"
             spellCheck={false}
           />
         </div>
-      </div>
-      <div className="absolute top-1 left-1">
-        <Link href="/">
-          <span className="flex items-center">
-            <ChevronLeft /> Back
-          </span>
-        </Link>
-      </div>
-      <div className="absolute top-1 right-1">
-        <Link href="/">
-          <Delete id={noteId} />
-        </Link>
       </div>
     </div>
   );
