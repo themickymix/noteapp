@@ -24,7 +24,6 @@ function Page() {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            
           },
           body: JSON.stringify({
             username: username,
@@ -44,7 +43,7 @@ function Page() {
         console.error("Registration failed:", data.message);
       }
     } catch (error) {
-      setMessage("An error occurred during registration." + error);
+      setMessage("An error occurred during registration.");
       console.error("Error:", error);
     }
   };
