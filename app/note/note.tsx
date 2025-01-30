@@ -81,7 +81,7 @@ function Note({ noteId }: { noteId: string }) {
   return (
     <div className="relative">
       {/* Fixed Navbar for Back and Delete */}
-      <div className="absolute top-0 left-0 w-full flex justify-between items-center p-3 bg-white shadow-md">
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center p-3">
         <Link href="/">
           <span className="flex items-center space-x-1 text-gray-700 hover:text-black">
             <ChevronLeft size={20} /> <span>Back</span>
