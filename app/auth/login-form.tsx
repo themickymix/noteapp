@@ -25,6 +25,12 @@ export function LoginForm() {
         {
           email,
           password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Ensure cookies are sent if needed
         }
       );
 
