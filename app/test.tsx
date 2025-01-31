@@ -54,7 +54,7 @@ function Test() {
       <NavBar />
       <Add />
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
         {notes.map((note: Note) => (
           <div key={note._id}>
             <div className="relative">
