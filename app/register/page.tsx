@@ -77,6 +77,7 @@ function Page() {
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
+            minLength={6}
             required
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
