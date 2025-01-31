@@ -13,6 +13,9 @@ export function LoginForm() {
   const [error, setError] = useState(""); // Store error message
   const router = useRouter();
 
+  // Disable the button if email is empty or password is less than 6 characters
+  const isDisabled = !email || password.length < 6;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -81,7 +84,7 @@ export function LoginForm() {
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       <button
         type="submit"
-        disabled={isLoading}
+        disabled={isLoading || isDisabled} // Disable if loading or conditions are not met
         className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none disabled:bg-gray-400">
         {isLoading ? "Logging in..." : "Login"}
       </button>
