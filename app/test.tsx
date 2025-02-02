@@ -1,6 +1,4 @@
 import React from "react";
-import axios from "axios";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Add from "./add";
 import NavBar from "./component/nav-bar";
@@ -49,38 +47,6 @@ const Test = ({ notes, error }: Props) => {
       </div>
     </div>
   );
-};
-
-// Fetch data on each request
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const data = response.data;
-
-    const validNotes = data.filter(
-      (note: Note) => note.title?.trim() || note.content?.trim()
-    );
-
-    return {
-      props: { notes: validNotes },
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      props: {
-        notes: [],
-        error: "Failed to fetch notes. Please try again later.",
-      },
-    };
-  }
 };
 
 export default Test;

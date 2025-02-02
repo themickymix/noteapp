@@ -1,50 +1,36 @@
-"use client";
-/* import React, { useState, useEffect } from "react";
-import axios from "axios"; */
 import Test from "./test";
+import { GetServerSideProps } from "next";
+import axios from "axios";
 
-const App = () => {
-/* 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const checkAuth = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/auth/status", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true, // Ensures cookies are sent
-        });
-
-        console.log("User is authenticated:", response.data);
-        setIsAuthenticated(response.data.isAuthenticated); // Adjust this key if needed
-      } catch (error: unknown) {
-        setIsAuthenticated(false); // Set explicitly to false
-
-        if (axios.isAxiosError(error) && error.response) {
-          console.error("User is not authenticated:", error.response.data);
-        } else {
-          console.error("An error occurred:", error);
-        }
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
-  }
- */
-  return (
-    <div>
-    
-      <Test />
-    </div>
-  );
+// Define props type
+type Props = {
+  notes: {
+    _id: string;
+    title: string;
+    content: string;
+  }[];
 };
 
-export default App;
+// Fetch data on the server
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`
+    );
+    const data = response.data;
+
+    // Filter out invalid notes
+    const validNotes = data.filter(
+      (note: Props["notes"][0]) => note.title?.trim() || note.content?.trim()
+    );
+
+    return { props: { notes: validNotes } };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return { props: { notes: [] } };
+  }
+};
+
+export default function Page({ notes }: Props) {
+  return <Test notes={notes} />; // ✅ Pass 'notes' prop
+}
