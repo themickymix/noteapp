@@ -1,11 +1,10 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import Add from "./add";
-import { useRouter } from "next/navigation";
-import Delete from "./delete";
-import NavBar from "./component/nav-bar";
+import React from "react";
 import axios from "axios";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import Add from "./add";
+import NavBar from "./component/nav-bar";
+import Delete from "./delete";
 
 type Note = {
   _id: string;
@@ -13,48 +12,20 @@ type Note = {
   content: string;
 };
 
-function Test() {
+type Props = {
+  notes: Note[];
+  error?: string;
+};
+
+const Test = ({ notes, error }: Props) => {
   const router = useRouter();
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = response.data;
-
-      const validNotes = data.filter(
-        (note: Note) => note.title?.trim() || note.content?.trim()
-      );
-
-      setNotes(validNotes);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError("Failed to fetch notes. Please try again later.");
-    }
-  };
-
-  useEffect(() => {
-    fetchData(); // Fetch notes initially
-  }, [notes]);
 
   return (
     <div>
       <NavBar />
       <Add />
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-8">
         {notes.map((note: Note) => (
           <div key={note._id}>
             <div className="relative">
@@ -78,6 +49,38 @@ function Test() {
       </div>
     </div>
   );
-}
+};
+
+// Fetch data on each request
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = response.data;
+
+    const validNotes = data.filter(
+      (note: Note) => note.title?.trim() || note.content?.trim()
+    );
+
+    return {
+      props: { notes: validNotes },
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return {
+      props: {
+        notes: [],
+        error: "Failed to fetch notes. Please try again later.",
+      },
+    };
+  }
+};
 
 export default Test;
